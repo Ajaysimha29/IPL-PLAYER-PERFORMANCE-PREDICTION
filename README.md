@@ -48,7 +48,7 @@ The Indian Premier League is a globally renowned T20 cricket tournament that att
 ## Contributors
 
 - AJAYSIMHA(https://github.com/AJAYSIMHA/AJAYSIMHA)
--
+
 
 ## License
 
