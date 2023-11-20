@@ -1,0 +1,364 @@
+import numpy as np
+'''
+will predict the how many wickets a bowler can get
+'''
+def predict_wickets_bowl(bowler_name, opposite_team,current_team):
+bowler_data = df_bowl[(df_bowl['Bowler'] == bowler_name) &␣
+↪(df_bowl['opposite team'] == opposite_team) & (df_bowl['team'] ==␣
+↪current_team)]
+run = bowler_data['run'].mean()
+wicket = bowler_data['wicket'].mean()
+No_ball = bowler_data['No_ball'].mean()
+over = bowler_data['over'].mean()
+ECO=bowler_data['ECO'].mean()
+dataF = pd.DataFrame([np.
+↪array([over,run,ECO,No_ball,team_mapping[current_team],team_mapping[opposite_team]])],␣
+↪columns=['over', 'run', 'ECO', 'No_ball','Team_ID','Opposite_Team_ID'])
+for index,row in dataF.iterrows():
+predicted_model_linearRegression=model_linearRegression_bowl.
+↪predict([row])
+predicted_model_DecisionTreeRegressor=model_DecisionTreeRegressor_bowl.
+↪predict([[row['over'],row['run'],row['ECO'],row['No_ball'],row['Team_ID'],row['Opposite_Team_ID']]])
+predicted_model_RandomForestRegressor=model_RandomForestRegressor_bowl.
+↪predict([[row['over'],row['run'],row['ECO'],row['No_ball'],row['Team_ID'],row['Opposite_Team_ID']]])
+␣
+↪predicted_model_GradientBoostingRegressor=model_GradientBoostingRegressor_bowl.
+↪predict([[row['over'],row['run'],row['ECO'],row['No_ball'],row['Team_ID'],row['Opposite_Team_ID']]])
+return␣
+↪predicted_model_linearRegression[0],predicted_model_DecisionTreeRegressor[0],predicted_model_RandomForestRegressor[0],predicted_model_GradientBoostingRegressor[0]
+[75]: df_bowl[df_bowl['Bowler']=='Yuzvendra Chahal']
+[75]: Bowler team over run wicket No_ball ECO \
+839 Yuzvendra Chahal Rajasthan Royals 4.0 17 4 0 4.3
+840 Yuzvendra Chahal Rajasthan Royals 4.0 50 1 0 12.5
+841 Yuzvendra Chahal Rajasthan Royals 4.0 27 3 0 6.8
+842 Yuzvendra Chahal Rajasthan Royals 4.0 27 2 0 6.8
+843 Yuzvendra Chahal Rajasthan Royals 4.0 36 1 0 9.0
+844 Yuzvendra Chahal Rajasthan Royals 4.0 41 0 0 10.3
+845 Yuzvendra Chahal Rajasthan Royals 4.0 28 1 0 7.0
+846 Yuzvendra Chahal Rajasthan Royals 2.0 21 0 0 10.5
+36
+847 Yuzvendra Chahal Rajasthan Royals 3.0 32 0 0 10.7
+848 Yuzvendra Chahal Rajasthan Royals 3.5 22 1 0 6.3
+849 Yuzvendra Chahal Rajasthan Royals 4.0 29 4 0 7.3
+850 Yuzvendra Chahal Rajasthan Royals 4.0 25 4 0 6.3
+851 Yuzvendra Chahal Rajasthan Royals 4.0 37 0 0 9.3
+852 Yuzvendra Chahal Rajasthan Royals 4.0 40 0 0 10.0
+opposite team bowler_ID Team_ID Opposite_Team_ID
+839 Sunrisers Hyderabad 136 6 7
+840 Punjab Kings 136 6 2
+841 Delhi Capitals 136 6 5
+842 Chennai Super Kings 136 6 0
+843 Gujarat Titans 136 6 1
+844 Lucknow Super Giants 136 6 4
+845 Royal Challengers Bangalore 136 6 9
+846 Chennai Super Kings 136 6 0
+847 Mumbai Indians 136 6 8
+848 Gujarat Titans 136 6 1
+849 Sunrisers Hyderabad 136 6 7
+850 Kolkata Knight Riders 136 6 3
+851 Royal Challengers Bangalore 136 6 9
+852 Punjab Kings 136 6 2
+[70]: for index,row in X_test_bowl.iterrows():
+# numerical_features = ['over', 'run', 'ECO',␣
+↪'No_ball','Team_ID','Opposite_Team_ID']
+predict_value=model_DecisionTreeRegressor_bowl.
+↪predict([[row['over'],row['run'],row['ECO'],row['No_ball'],row['Team_ID'],row['Opposite_Team_ID']]])
+print(predict_value)
+[1.65714286]
+[1.08333333]
+[1.66666667]
+[0.]
+[0.63414634]
+[1.7260274]
+[1.38]
+[0.83035714]
+[1.]
+[0.23076923]
+[0.32692308]
+[0.]
+[1.65714286]
+[1.]
+[0.23076923]
+[0.]
+[0.83035714]
+37
+[1.7260274]
+[0.32692308]
+[1.41176471]
+[0.32692308]
+[0.83035714]
+[0.42857143]
+[0.83035714]
+[1.41176471]
+[1.7260274]
+[1.75]
+[0.]
+[0.63414634]
+[0.]
+[4.]
+[0.23076923]
+[0.]
+[1.]
+[0.]
+[0.83035714]
+[0.3]
+[0.83035714]
+[1.08333333]
+[0.83035714]
+[1.41176471]
+[1.7260274]
+[1.41176471]
+[0.23076923]
+[1.65714286]
+[1.7260274]
+[1.41176471]
+[0.14285714]
+[0.83035714]
+[1.]
+[1.7260274]
+[0.83035714]
+[1.]
+[1.7260274]
+[0.23076923]
+[1.41176471]
+[1.38]
+[0.83035714]
+[1.38]
+[1.41176471]
+[1.38]
+[0.23076923]
+[1.38]
+[1.38]
+[0.23076923]
+38
+[1.41176471]
+[1.]
+[0.83035714]
+[1.7260274]
+[1.7260274]
+[0.14285714]
+[0.]
+[0.23076923]
+[0.32692308]
+[0.23076923]
+[1.7260274]
+[1.]
+[1.7260274]
+[1.65714286]
+[1.]
+[1.38]
+[1.41176471]
+[1.]
+[0.63414634]
+[0.23076923]
+[4.]
+[1.38]
+[0.23076923]
+[1.]
+[4.]
+[1.38]
+[0.14285714]
+[1.65714286]
+[0.25]
+[0.83035714]
+[0.23076923]
+[0.14285714]
+[1.65714286]
+[0.]
+[0.83035714]
+[0.83035714]
+[0.23076923]
+[1.7260274]
+[0.23076923]
+[0.83035714]
+[0.14285714]
+[0.23076923]
+[0.23076923]
+[1.7260274]
+[4.]
+[1.]
+[1.]
+[0.32692308]
+39
+[3.]
+[0.83035714]
+[1.]
+[1.]
+[0.23076923]
+[1.38]
+[0.23076923]
+[0.83035714]
+[1.7260274]
+[0.63414634]
+[1.7260274]
+[0.83035714]
+[1.7260274]
+[0.23076923]
+[1.08333333]
+[1.]
+[0.83035714]
+[0.]
+[0.]
+[1.7260274]
+[0.71428571]
+[3.]
+[1.65714286]
+[0.71428571]
+[1.]
+[1.]
+[0.14285714]
+[1.7260274]
+[1.65714286]
+[0.]
+[1.]
+[0.14285714]
+[1.38]
+[1.7260274]
+[1.7260274]
+[1.41176471]
+[0.83035714]
+[1.]
+[0.23076923]
+[0.42857143]
+[0.83035714]
+[1.65714286]
+[0.]
+[1.]
+[1.7260274]
+[0.32692308]
+[0.3]
+[0.25]
+40
+[1.38]
+[0.83333333]
+[0.83035714]
+[0.83035714]
+[1.]
+[71]: bowler_name = 'Yuzvendra Chahal'
+current_team = 'Rajasthan Royals'
+opposite_team='Kolkata Knight Riders'
+predicted_model_linearRegression,predicted_model_DecisionTreeRegressor,predicted_model_RandomForestRegressor,predicted_model_GradientBoostingRegressor␣
+↪= predict_wickets_bowl(bowler_name, opposite_team,current_team)
+#␣
+↪print(predicted_model_linearRegression,predicted_model_DecisionTreeRegressor,predicted_model_RandomForestRegressor,predicted_model_GradientBoostingRegressor,predicted_model_SVR)
+print('model_linearRegression')
+print(f'Predicted wickets for {bowler_name} against {opposite_team}:␣
+↪{round(predicted_model_linearRegression[0])}')
+print('predicted_model_DecisionTreeRegressor')
+print(f'Predicted wickets for {bowler_name} against {opposite_team}:␣
+↪{round(predicted_model_DecisionTreeRegressor)}')
+print('model_RandomForestRegressor')
+print(f'Predicted wickets for {bowler_name} against {opposite_team}:␣
+↪{round(predicted_model_RandomForestRegressor)} ')
+print('model_GradientBoostingRegressor')
+print(f'Predicted wickets for {bowler_name} against {opposite_team}:␣
+↪{round(predicted_model_GradientBoostingRegressor[0])} ')
+model_linearRegression
+Predicted wickets for Yuzvendra Chahal against Kolkata Knight Riders: 2
+predicted_model_DecisionTreeRegressor
+Predicted wickets for Yuzvendra Chahal against Kolkata Knight Riders: 2
+model_RandomForestRegressor
+Predicted wickets for Yuzvendra Chahal against Kolkata Knight Riders: 3
+model_GradientBoostingRegressor
+Predicted wickets for Yuzvendra Chahal against Kolkata Knight Riders: 2
+[76]: df_bowl[df_bowl['Bowler']=='Abhishek Sharma']
+[76]: Bowler team over run wicket No_ball ECO \
+0 Abhishek Sharma Sunrisers Hyderabad 3.0 26 1 0 8.7
+1 Abhishek Sharma Sunrisers Hyderabad 2.0 15 0 0 7.5
+2 Abhishek Sharma Sunrisers Hyderabad 3.0 42 1 0 14.0
+3 Abhishek Sharma Sunrisers Hyderabad 1.0 13 0 0 13.0
+4 Abhishek Sharma Sunrisers Hyderabad 3.0 28 0 0 9.3
+41
+opposite team bowler_ID Team_ID Opposite_Team_ID
+0 Delhi Capitals 0 7 5
+1 Rajasthan Royals 0 7 6
+2 Lucknow Super Giants 0 7 4
+3 Gujarat Titans 0 7 1
+4 Royal Challengers Bangalore 0 7 9
+[77]: bowler_name = 'Abhishek Sharma'
+current_team = 'Sunrisers Hyderabad'
+opposite_team='Royal Challengers Bangalore'
+predicted_model_linearRegression,predicted_model_DecisionTreeRegressor,predicted_model_RandomForestRegressor,predicted_model_GradientBoostingRegressor␣
+↪= predict_wickets_bowl(bowler_name, opposite_team,current_team)
+#␣
+↪print(predicted_model_linearRegression,predicted_model_DecisionTreeRegressor,predicted_model_RandomForestRegressor,predicted_model_GradientBoostingRegressor,predicted_model_SVR)
+print('model_linearRegression')
+print(f'Predicted wickets for {bowler_name} against {opposite_team}:␣
+↪{round(predicted_model_linearRegression[0])}')
+print('predicted_model_DecisionTreeRegressor')
+print(f'Predicted wickets for {bowler_name} against {opposite_team}:␣
+↪{round(predicted_model_DecisionTreeRegressor)}')
+print('model_RandomForestRegressor')
+print(f'Predicted wickets for {bowler_name} against {opposite_team}:␣
+↪{round(predicted_model_RandomForestRegressor)} ')
+print('model_GradientBoostingRegressor')
+print(f'Predicted wickets for {bowler_name} against {opposite_team}:␣
+↪{round(predicted_model_GradientBoostingRegressor[0])} ')
+model_linearRegression
+Predicted wickets for Abhishek Sharma against Royal Challengers Bangalore: 1
+predicted_model_DecisionTreeRegressor
+Predicted wickets for Abhishek Sharma against Royal Challengers Bangalore: 0
+model_RandomForestRegressor
+Predicted wickets for Abhishek Sharma against Royal Challengers Bangalore: 0
+model_GradientBoostingRegressor
+Predicted wickets for Abhishek Sharma against Royal Challengers Bangalore: 1
+[78]: df_bowl[df_bowl['Bowler']=='Rashid Khan']
+[78]: Bowler team over run wicket No_ball ECO \
+577 Rashid Khan Gujarat Titans 4.0 26 2 0 6.5
+578 Rashid Khan Gujarat Titans 4.0 31 3 0 7.8
+579 Rashid Khan Gujarat Titans 4.0 37 3 0 9.3
+580 Rashid Khan Gujarat Titans 4.0 18 2 0 4.5
+581 Rashid Khan Gujarat Titans 4.0 46 2 0 11.5
+42
+582 Rashid Khan Gujarat Titans 4.0 33 1 0 8.3
+583 Rashid Khan Gujarat Titans 4.0 27 2 0 6.8
+584 Rashid Khan Gujarat Titans 4.0 54 0 0 13.5
+585 Rashid Khan Gujarat Titans 4.0 28 1 1 7.0
+586 Rashid Khan Gujarat Titans 4.0 14 3 0 3.5
+587 Rashid Khan Gujarat Titans 4.0 34 1 0 8.5
+588 Rashid Khan Gujarat Titans 4.0 30 4 0 7.5
+589 Rashid Khan Gujarat Titans 4.0 28 0 0 7.0
+590 Rashid Khan Gujarat Titans 4.0 24 1 0 6.0
+opposite team bowler_ID Team_ID Opposite_Team_ID
+577 Chennai Super Kings 100 1 0
+578 Delhi Capitals 100 1 5
+579 Kolkata Knight Riders 100 1 3
+580 Punjab Kings 100 1 2
+581 Rajasthan Royals 100 1 6
+582 Lucknow Super Giants 100 1 4
+583 Mumbai Indians 100 1 8
+584 Kolkata Knight Riders 100 1 3
+585 Delhi Capitals 100 1 5
+586 Rajasthan Royals 100 1 6
+587 Lucknow Super Giants 100 1 4
+588 Mumbai Indians 100 1 8
+589 Sunrisers Hyderabad 100 1 7
+590 Royal Challengers Bangalore 100 1 9
+[82]: bowler_name = 'Rashid Khan'
+current_team = 'Gujarat Titans'
+opposite_team='Rajasthan Royals'
+predicted_model_linearRegression,predicted_model_DecisionTreeRegressor,predicted_model_RandomForestRegressor,predicted_model_GradientBoostingRegressor␣
+↪= predict_wickets_bowl(bowler_name, opposite_team,current_team)
+#␣
+↪print(predicted_model_linearRegression,predicted_model_DecisionTreeRegressor,predicted_model_RandomForestRegressor,predicted_model_GradientBoostingRegressor,predicted_model_SVR)
+print('model_linearRegression')
+print(f'Predicted wickets for {bowler_name} against {opposite_team}:␣
+↪{round(predicted_model_linearRegression[0])}')
+print('predicted_model_DecisionTreeRegressor')
+print(f'Predicted wickets for {bowler_name} against {opposite_team}:␣
+↪{round(predicted_model_DecisionTreeRegressor)}')
+print('model_RandomForestRegressor')
+print(f'Predicted wickets for {bowler_name} against {opposite_team}:␣
+↪{round(predicted_model_RandomForestRegressor)} ')
+print('model_GradientBoostingRegressor')
+43
+print(f'Predicted wickets for {bowler_name} against {opposite_team}:␣
+↪{round(predicted_model_GradientBoostingRegressor[0])} ')
+model_linearRegression
+Predicted wickets for Rashid Khan against Rajasthan Royals: 1
+predicted_model_DecisionTreeRegressor
+Predicted wickets for Rashid Khan against Rajasthan Royals: 4
+model_RandomForestRegressor
+Predicted wickets for Rashid Khan against Rajasthan Royals: 3
+model_GradientBoostingRegressor
+Predicted wickets for Rashid Khan against Rajasthan Royals: 
