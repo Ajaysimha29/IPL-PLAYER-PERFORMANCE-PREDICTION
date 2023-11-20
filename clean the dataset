@@ -1,0 +1,433 @@
+import pandas as pd
+df=pd.read_csv("bat.csv",encoding='windows-1252')
+df.columns
+[7]: Index(['match_no', 'Batsman', 'team', 'Run', 'Ball', '4s', '6s', 'out_by'],
+dtype='object')
+[8]: df.head(10)
+[8]: match_no Batsman team Run Ball 4s 6s \
+0 1 Devon Conway Chennai Super Kings 1 6 0 0
+1 1 Ruturaj Gaikwad Chennai Super Kings 92 50 4 9
+2 1 Moeen Ali Chennai Super Kings 23 17 4 1
+3 1 Ben Stokes Chennai Super Kings 7 6 1 0
+4 1 Ambati Rayudu Chennai Super Kings 12 12 0 1
+5 1 Shivam Dube Chennai Super Kings 19 18 0 1
+6 1 Ravindra Jadeja Chennai Super Kings 1 2 0 0
+7 1 MS Dhoni Chennai Super Kings 14 7 1 1
+8 1 Mitchell Santner Chennai Super Kings 1 3 0 0
+9 1 Wriddhiman Saha Gujarat Titans 25 16 2 2
+out_by
+0 Mohammed Shami
+1 Alzarri Joseph
+2 Rashid Khan
+3 Rashid Khan
+4 Joshua Little
+5 Mohammed Shami
+6 Alzarri Joseph
+7 Not Out
+8 Not Out
+9 Rajvardhan Hangargekar
+[11]: import pandas as pd
+df_bowl = pd.read_csv("iplbowler.csv",encoding='windows-1252')
+df_bowl.columns
+1
+[11]: Index(['match_no', 'Bowler', 'team', 'over', 'run', 'wicket', 'No_ball',
+'ECO'],
+dtype='object')
+[12]: df['50s'] = 0
+df['100s'] = 0
+'''
+adding new columns 50s and 100s based on the runs made by batsmen in batsmen␣
+↪dataframe
+'''
+# Loop through the DataFrame and update '50s' and '100s' based on 'Run' column
+for index, row in df.iterrows():
+if row['Run'] >= 50 and row['Run']<100:
+df.at[index, '50s'] = 1
+if row['Run'] >= 100:
+df.at[index, '100s'] = 1
+[13]: '''
+addding a new coloumn oppositeteam which
+will assign for each row based on the match_no in batsmen dataframe
+'''
+def get_opposite_team(row):
+unique_teams = df[df['match_no'] == row['match_no']]['team'].unique()
+opposite_team = None
+for team in unique_teams:
+if team != row['team']:
+opposite_team = team
+break
+return opposite_team
+# Apply the function to create the 'opposite team' column
+df['opposite team'] = df.apply(get_opposite_team, axis=1)
+[14]: # batsmen dataframe
+df
+[14]: match_no Batsman team Run Ball 4s 6s \
+0 1 Devon Conway Chennai Super Kings 1 6 0 0
+1 1 Ruturaj Gaikwad Chennai Super Kings 92 50 4 9
+2 1 Moeen Ali Chennai Super Kings 23 17 4 1
+3 1 Ben Stokes Chennai Super Kings 7 6 1 0
+4 1 Ambati Rayudu Chennai Super Kings 12 12 0 1
+… … … … … … .. ..
+1109 70 Shubman Gill Gujarat Titans 104 52 5 8
+1110 70 Vijay Shankar Gujarat Titans 53 35 7 2
+1111 70 Dasun Shanaka Gujarat Titans 0 3 0 0
+1112 70 David Miller Gujarat Titans 6 7 1 0
+2
+1113 70 Rahul Tewatia Gujarat Titans 4 5 0 0
+out_by 50s 100s opposite team
+0 Mohammed Shami 0 0 Gujarat Titans
+1 Alzarri Joseph 1 0 Gujarat Titans
+2 Rashid Khan 0 0 Gujarat Titans
+3 Rashid Khan 0 0 Gujarat Titans
+4 Joshua Little 0 0 Gujarat Titans
+… … … … …
+1109 Not Out 0 1 Royal Challengers Bangalore
+1110 Vijaykumar Vyshak 1 0 Royal Challengers Bangalore
+1111 Harshal Patel 0 0 Royal Challengers Bangalore
+1112 Mohammed Siraj 0 0 Royal Challengers Bangalore
+1113 Not Out 0 0 Royal Challengers Bangalore
+[1114 rows x 11 columns]
+[15]: # bolwers dataframe
+df_bowl
+[15]: match_no Bowler team over run \
+0 1 Mohammed Shami Gujarat Titans 4.0 29
+1 1 Hardik Pandya Gujarat Titans 3.0 28
+2 1 Joshua Little Gujarat Titans 4.0 41
+3 1 Rashid Khan Gujarat Titans 4.0 26
+4 1 Alzarri Joseph Gujarat Titans 4.0 33
+.. … … … … …
+848 70 Wayne Parnell Royal Challengers Bangalore 3.1 42
+849 70 Vijaykumar Vyshak Royal Challengers Bangalore 4.0 40
+850 70 Himanshu Sharma Royal Challengers Bangalore 3.0 28
+851 70 Harshal Patel Royal Challengers Bangalore 4.0 29
+852 70 Michael Bracewell Royal Challengers Bangalore 1.0 16
+wicket No_ball ECO
+0 2 1 7.3
+1 0 0 9.3
+2 1 0 10.3
+3 2 0 6.5
+4 2 0 8.3
+.. … … …
+848 0 1 13.5
+849 1 0 10.0
+850 0 0 9.3
+851 1 0 7.3
+852 0 0 16.0
+[853 rows x 8 columns]
+3
+[16]: '''
+creating a new column in the bowlers datframe by
+using the batsemn df dataframe by merge methods
+'''
+df_bowl = df_bowl.merge(df[['match_no', 'team', 'opposite team']],␣
+↪left_on=['match_no', 'team'], right_on=['match_no', 'team'], how='left')
+[17]: df_bowl
+[17]: match_no Bowler team over run \
+0 1 Mohammed Shami Gujarat Titans 4.0 29
+1 1 Mohammed Shami Gujarat Titans 4.0 29
+2 1 Mohammed Shami Gujarat Titans 4.0 29
+3 1 Mohammed Shami Gujarat Titans 4.0 29
+4 1 Mohammed Shami Gujarat Titans 4.0 29
+… … … … … …
+6669 70 Michael Bracewell Royal Challengers Bangalore 1.0 16
+6670 70 Michael Bracewell Royal Challengers Bangalore 1.0 16
+6671 70 Michael Bracewell Royal Challengers Bangalore 1.0 16
+6672 70 Michael Bracewell Royal Challengers Bangalore 1.0 16
+6673 70 Michael Bracewell Royal Challengers Bangalore 1.0 16
+wicket No_ball ECO opposite team
+0 2 1 7.3 Chennai Super Kings
+1 2 1 7.3 Chennai Super Kings
+2 2 1 7.3 Chennai Super Kings
+3 2 1 7.3 Chennai Super Kings
+4 2 1 7.3 Chennai Super Kings
+… … … … …
+6669 0 0 16.0 Gujarat Titans
+6670 0 0 16.0 Gujarat Titans
+6671 0 0 16.0 Gujarat Titans
+6672 0 0 16.0 Gujarat Titans
+6673 0 0 16.0 Gujarat Titans
+[6674 rows x 9 columns]
+[18]: '''
+by using merge we will get redudant rows
+we are removing them by using groupby using columns
+bolwer and match_no
+'''
+df_bowl = df_bowl.groupby(['Bowler','match_no']).first().reset_index()
+print(len(df_bowl))
+df_bowl.drop(['match_no'], axis=1, inplace=True)
+4
+df_bowl.head(10)
+853
+[18]: Bowler team over run wicket No_ball ECO \
+0 Abhishek Sharma Sunrisers Hyderabad 3.0 26 1 0 8.7
+1 Abhishek Sharma Sunrisers Hyderabad 2.0 15 0 0 7.5
+2 Abhishek Sharma Sunrisers Hyderabad 3.0 42 1 0 14.0
+3 Abhishek Sharma Sunrisers Hyderabad 1.0 13 0 0 13.0
+4 Abhishek Sharma Sunrisers Hyderabad 3.0 28 0 0 9.3
+5 Adam Zampa Rajasthan Royals 4.0 43 1 0 10.8
+6 Adam Zampa Rajasthan Royals 4.0 32 1 0 8.0
+7 Adam Zampa Rajasthan Royals 3.0 22 3 0 7.3
+8 Adam Zampa Rajasthan Royals 3.0 40 0 0 13.3
+9 Adam Zampa Rajasthan Royals 4.0 25 2 0 6.3
+opposite team
+0 Delhi Capitals
+1 Rajasthan Royals
+2 Lucknow Super Giants
+3 Gujarat Titans
+4 Royal Challengers Bangalore
+5 Chennai Super Kings
+6 Gujarat Titans
+7 Chennai Super Kings
+8 Gujarat Titans
+9 Royal Challengers Bangalore
+[19]: '''
+deleting unneccessary columns in batsmen dataframe df
+'''
+df=df.drop(columns=['out_by'])
+df=df.drop(columns=['match_no'])
+[20]: '''
+checking whether any player has team and opposite of same values in batsmen␣
+↪dataframe
+'''
+are_columns_equal = df['team'] == df['opposite team']
+len(df[are_columns_equal])
+[20]: 0
+[21]: '''
+checking for any row has null values
+and removing those columns for bowlers dataset
+'''
+5
+missing_values_count = df_bowl.isnull().sum()
+missing_values_count
+df_bowl.dropna(inplace=True)
+[ ]:
+[22]: '''
+checking whether any player has team and opposite of same values in bowler␣
+↪dataframe
+'''
+are_columns_equal = df_bowl['team'] == df_bowl['opposite team']
+len(df_bowl[are_columns_equal])
+[22]: 0
+[23]: df_bowl
+[23]: Bowler team over run wicket No_ball ECO \
+0 Abhishek Sharma Sunrisers Hyderabad 3.0 26 1 0 8.7
+1 Abhishek Sharma Sunrisers Hyderabad 2.0 15 0 0 7.5
+2 Abhishek Sharma Sunrisers Hyderabad 3.0 42 1 0 14.0
+3 Abhishek Sharma Sunrisers Hyderabad 1.0 13 0 0 13.0
+4 Abhishek Sharma Sunrisers Hyderabad 3.0 28 0 0 9.3
+.. … … … … … … …
+848 Yuzvendra Chahal Rajasthan Royals 3.5 22 1 0 6.3
+849 Yuzvendra Chahal Rajasthan Royals 4.0 29 4 0 7.3
+850 Yuzvendra Chahal Rajasthan Royals 4.0 25 4 0 6.3
+851 Yuzvendra Chahal Rajasthan Royals 4.0 37 0 0 9.3
+852 Yuzvendra Chahal Rajasthan Royals 4.0 40 0 0 10.0
+opposite team
+0 Delhi Capitals
+1 Rajasthan Royals
+2 Lucknow Super Giants
+3 Gujarat Titans
+4 Royal Challengers Bangalore
+.. …
+848 Gujarat Titans
+849 Sunrisers Hyderabad
+850 Kolkata Knight Riders
+851 Royal Challengers Bangalore
+852 Punjab Kings
+[830 rows x 8 columns]
+6
+[24]: '''
+#checking for any row has null values and removing those columns for bowlers␣
+↪dataset
+'''
+missing_values_count = df.isnull().sum()
+missing_values_count
+df.dropna(inplace=True)
+[25]: '''
+collecting all the bowlers and assigning a unique id to them
+'''
+unique_bowler = df_bowl['Bowler'].unique()
+batsman_mapping = {bowler: idx for idx, bowler in enumerate(unique_bowler)}
+df_bowl['bowler_ID'] = df_bowl['Bowler'].map(batsman_mapping)
+[26]: '''
+collecting all the batsmen and assigning a unique id to them
+'''
+unique_batsmen = df['Batsman'].unique()
+batsman_mapping = {batsman: idx for idx, batsman in enumerate(unique_batsmen)}
+df['Batsman_ID'] = df['Batsman'].map(batsman_mapping)
+[27]: '''
+collecting all the team and assigning a unique id to them
+'''
+unique_teams = df['team'].unique()
+team_mapping = {team: idx for idx, team in enumerate(unique_teams)}
+# Add a new column 'Team_ID' to the DataFrame with unique identifiers
+df['Team_ID'] = df['team'].map(team_mapping)
+df['Opposite_Team_ID']=df['opposite team'].map(team_mapping)
+[28]: #adding two new coloumns teamId and oppositeTeamID based on the map we created␣
+↪before
+df_bowl['Team_ID'] = df_bowl['team'].map(team_mapping)
+df_bowl['Opposite_Team_ID']=df_bowl['opposite team'].map(team_mapping)
+[29]: df_bowl
+[29]: Bowler team over run wicket No_ball ECO \
+0 Abhishek Sharma Sunrisers Hyderabad 3.0 26 1 0 8.7
+1 Abhishek Sharma Sunrisers Hyderabad 2.0 15 0 0 7.5
+2 Abhishek Sharma Sunrisers Hyderabad 3.0 42 1 0 14.0
+3 Abhishek Sharma Sunrisers Hyderabad 1.0 13 0 0 13.0
+4 Abhishek Sharma Sunrisers Hyderabad 3.0 28 0 0 9.3
+7
+.. … … … … … … …
+848 Yuzvendra Chahal Rajasthan Royals 3.5 22 1 0 6.3
+849 Yuzvendra Chahal Rajasthan Royals 4.0 29 4 0 7.3
+850 Yuzvendra Chahal Rajasthan Royals 4.0 25 4 0 6.3
+851 Yuzvendra Chahal Rajasthan Royals 4.0 37 0 0 9.3
+852 Yuzvendra Chahal Rajasthan Royals 4.0 40 0 0 10.0
+opposite team bowler_ID Team_ID Opposite_Team_ID
+0 Delhi Capitals 0 7 5
+1 Rajasthan Royals 0 7 6
+2 Lucknow Super Giants 0 7 4
+3 Gujarat Titans 0 7 1
+4 Royal Challengers Bangalore 0 7 9
+.. … … … …
+848 Gujarat Titans 136 6 1
+849 Sunrisers Hyderabad 136 6 7
+850 Kolkata Knight Riders 136 6 3
+851 Royal Challengers Bangalore 136 6 9
+852 Punjab Kings 136 6 2
+[830 rows x 11 columns]
+[30]: '''
+adding a new column in batsmen dataframe and checking for null values and
+removing them if any have
+'''
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+df['Strike Rate'] = (df['Run'] / df['Ball']) * 100
+df['Strike Rate'].fillna(0, inplace=True)
+df.isnull().sum()
+[30]: Batsman 0
+team 0
+Run 0
+Ball 0
+4s 0
+6s 0
+50s 0
+100s 0
+opposite team 0
+Batsman_ID 0
+Team_ID 0
+Opposite_Team_ID 0
+Strike Rate 0
+dtype: int64
+8
+[31]: df
+[31]: Batsman team Run Ball 4s 6s 50s 100s \
+0 Devon Conway Chennai Super Kings 1 6 0 0 0 0
+1 Ruturaj Gaikwad Chennai Super Kings 92 50 4 9 1 0
+2 Moeen Ali Chennai Super Kings 23 17 4 1 0 0
+3 Ben Stokes Chennai Super Kings 7 6 1 0 0 0
+4 Ambati Rayudu Chennai Super Kings 12 12 0 1 0 0
+… … … … … .. .. … …
+1109 Shubman Gill Gujarat Titans 104 52 5 8 0 1
+1110 Vijay Shankar Gujarat Titans 53 35 7 2 1 0
+1111 Dasun Shanaka Gujarat Titans 0 3 0 0 0 0
+1112 David Miller Gujarat Titans 6 7 1 0 0 0
+1113 Rahul Tewatia Gujarat Titans 4 5 0 0 0 0
+opposite team Batsman_ID Team_ID Opposite_Team_ID \
+0 Gujarat Titans 0 0 1
+1 Gujarat Titans 1 0 1
+2 Gujarat Titans 2 0 1
+3 Gujarat Titans 3 0 1
+4 Gujarat Titans 4 0 1
+… … … … …
+1109 Royal Challengers Bangalore 10 1 9
+1110 Royal Challengers Bangalore 13 1 9
+1111 Royal Challengers Bangalore 168 1 9
+1112 Royal Challengers Bangalore 84 1 9
+1113 Royal Challengers Bangalore 14 1 9
+Strike Rate
+0 16.666667
+1 184.000000
+2 135.294118
+3 116.666667
+4 100.000000
+… …
+1109 200.000000
+1110 151.428571
+1111 0.000000
+1112 85.714286
+1113 80.000000
+[1106 rows x 13 columns]
+[32]: df.head(20)
+[32]: Batsman team Run Ball 4s 6s 50s 100s \
+0 Devon Conway Chennai Super Kings 1 6 0 0 0 0
+9
+1 Ruturaj Gaikwad Chennai Super Kings 92 50 4 9 1 0
+2 Moeen Ali Chennai Super Kings 23 17 4 1 0 0
+3 Ben Stokes Chennai Super Kings 7 6 1 0 0 0
+4 Ambati Rayudu Chennai Super Kings 12 12 0 1 0 0
+5 Shivam Dube Chennai Super Kings 19 18 0 1 0 0
+6 Ravindra Jadeja Chennai Super Kings 1 2 0 0 0 0
+7 MS Dhoni Chennai Super Kings 14 7 1 1 0 0
+8 Mitchell Santner Chennai Super Kings 1 3 0 0 0 0
+9 Wriddhiman Saha Gujarat Titans 25 16 2 2 0 0
+10 Shubman Gill Gujarat Titans 63 36 6 3 1 0
+11 Sai Sudharsan Gujarat Titans 22 17 3 0 0 0
+12 Hardik Pandya Gujarat Titans 8 11 0 0 0 0
+13 Vijay Shankar Gujarat Titans 27 21 2 1 0 0
+14 Rahul Tewatia Gujarat Titans 15 14 1 1 0 0
+15 Rashid Khan Gujarat Titans 10 3 1 1 0 0
+16 Prabhsimran Singh Punjab Kings 23 12 2 2 0 0
+17 Shikhar Dhawan Punjab Kings 40 29 6 0 0 0
+18 Bhanuka Rajapaksa Punjab Kings 50 32 5 2 1 0
+19 Jitesh Sharma Punjab Kings 21 11 1 2 0 0
+opposite team Batsman_ID Team_ID Opposite_Team_ID Strike Rate
+0 Gujarat Titans 0 0 1 16.666667
+1 Gujarat Titans 1 0 1 184.000000
+2 Gujarat Titans 2 0 1 135.294118
+3 Gujarat Titans 3 0 1 116.666667
+4 Gujarat Titans 4 0 1 100.000000
+5 Gujarat Titans 5 0 1 105.555556
+6 Gujarat Titans 6 0 1 50.000000
+7 Gujarat Titans 7 0 1 200.000000
+8 Gujarat Titans 8 0 1 33.333333
+9 Chennai Super Kings 9 1 0 156.250000
+10 Chennai Super Kings 10 1 0 175.000000
+11 Chennai Super Kings 11 1 0 129.411765
+12 Chennai Super Kings 12 1 0 72.727273
+13 Chennai Super Kings 13 1 0 128.571429
+14 Chennai Super Kings 14 1 0 107.142857
+15 Chennai Super Kings 15 1 0 333.333333
+16 Kolkata Knight Riders 16 2 3 191.666667
+17 Kolkata Knight Riders 17 2 3 137.931034
+18 Kolkata Knight Riders 18 2 3 156.250000
+19 Kolkata Knight Riders 19 2 3 190.909091
+[33]: '''
+Calculating correlations for batsmen dataset
+'''
+df.corr()
+10
+<ipython-input-33-6a50f1cc61a0>:4: FutureWarning: The default value of
+numeric_only in DataFrame.corr is deprecated. In a future version, it will
+default to False. Select only valid columns or specify the value of numeric_only
+to silence this warning.
+df.corr()
+[33]: Run Ball 4s 6s 50s 100s \
+Run 1.000000 0.940558 0.857033 0.787646 0.722227 0.363443
+Ball 0.940558 1.000000 0.821540 0.625051 0.674167 0.303625
+4s 0.857033 0.821540 1.000000 0.449108 0.624891 0.340952
+6s 0.787646 0.625051 0.449108 1.000000 0.575364 0.286341
+50s 0.722227 0.674167 0.624891 0.575364 1.000000 -0.037530
+100s 0.363443 0.303625 0.340952 0.286341 -0.037530 1.000000
+Batsman_ID -0.144831 -0.153345 -0.108313 -0.124935 -0.079200 -0.020464
+Team_ID -0.008202 -0.011578 0.016402 -0.028410 0.017374 0.035793
+Opposite_Team_ID 0.032669 0.017850 0.029013 0.044494 0.022566 0.049637
+Strike Rate 0.515843 0.348381 0.410118 0.534143 0.273219 0.094774
+Batsman_ID Team_ID Opposite_Team_ID Strike Rate
+Run -0.144831 -0.008202 0.032669 0.515843
+Ball -0.153345 -0.011578 0.017850 0.348381
+4s -0.108313 0.016402 0.029013 0.410118
+6s -0.124935 -0.028410 0.044494 0.534143
+50s -0.079200 0.017374 0.022566 0.273219
+100s -0.020464 0.035793 0.049637 0.094774
+Batsman_ID 1.000000 0.451172 -0.005898 -0.114192
+Team_ID 0.451172 1.000000 -0.128127 -0.017734
+Opposite_Team_ID -0.005898 -0.128127 1.000000 0.000722
+Strike Rate -0.114192 -0.017734 0.000722 1.000000
