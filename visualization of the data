@@ -1,0 +1,506 @@
+import matplotlib.pyplot as plt
+from seaborn import heatmap
+heatmap(data=df.corr(),annot=True)
+plt.show()
+<ipython-input-34-34735480c79e>:6: FutureWarning: The default value of
+numeric_only in DataFrame.corr is deprecated. In a future version, it will
+default to False. Select only valid columns or specify the value of numeric_only
+to silence this warning.
+heatmap(data=df.corr(),annot=True)
+11
+[35]: '''
+# Creating a regression plot for 'Ball' vs. 'Run'
+'''
+import seaborn as sea
+sea.regplot(x=df['Ball'],y=df['Run'],data=df)
+plt.show()
+12
+[36]: df
+[36]: Batsman team Run Ball 4s 6s 50s 100s \
+0 Devon Conway Chennai Super Kings 1 6 0 0 0 0
+1 Ruturaj Gaikwad Chennai Super Kings 92 50 4 9 1 0
+2 Moeen Ali Chennai Super Kings 23 17 4 1 0 0
+3 Ben Stokes Chennai Super Kings 7 6 1 0 0 0
+4 Ambati Rayudu Chennai Super Kings 12 12 0 1 0 0
+… … … … … .. .. … …
+1109 Shubman Gill Gujarat Titans 104 52 5 8 0 1
+1110 Vijay Shankar Gujarat Titans 53 35 7 2 1 0
+1111 Dasun Shanaka Gujarat Titans 0 3 0 0 0 0
+1112 David Miller Gujarat Titans 6 7 1 0 0 0
+1113 Rahul Tewatia Gujarat Titans 4 5 0 0 0 0
+opposite team Batsman_ID Team_ID Opposite_Team_ID \
+0 Gujarat Titans 0 0 1
+1 Gujarat Titans 1 0 1
+2 Gujarat Titans 2 0 1
+3 Gujarat Titans 3 0 1
+4 Gujarat Titans 4 0 1
+13
+… … … … …
+1109 Royal Challengers Bangalore 10 1 9
+1110 Royal Challengers Bangalore 13 1 9
+1111 Royal Challengers Bangalore 168 1 9
+1112 Royal Challengers Bangalore 84 1 9
+1113 Royal Challengers Bangalore 14 1 9
+Strike Rate
+0 16.666667
+1 184.000000
+2 135.294118
+3 116.666667
+4 100.000000
+… …
+1109 200.000000
+1110 151.428571
+1111 0.000000
+1112 85.714286
+1113 80.000000
+[1106 rows x 13 columns]
+[38]: '''
+plotting graph for players in batting based on runs
+'''
+import seaborn as sea
+import matplotlib.pyplot as plt
+# top 10 players(batsmen) by most runs
+top_10_players = df.sort_values(by='Run', ascending=False).head(10)
+sea.barplot(x='Run', y='Batsman', data=top_10_players)
+plt.title("Top 10 Players with the Most runs in single match")
+plt.xlabel("Number of 50s")
+plt.ylabel("Player")
+plt.figure(figsize=(10, 6))
+#plt.xticks(rotation=90)
+[38]: <Figure size 1000x600 with 0 Axes>
+14
+<Figure size 1000x600 with 0 Axes>
+[39]: '''
+Calculating correlations between variables and creating a heatmap
+'''
+df_bowl.corr()
+<ipython-input-39-dfceb15885f9>:4: FutureWarning: The default value of
+numeric_only in DataFrame.corr is deprecated. In a future version, it will
+default to False. Select only valid columns or specify the value of numeric_only
+to silence this warning.
+df_bowl.corr()
+[39]: over run wicket No_ball ECO bowler_ID \
+over 1.000000 0.626751 0.425219 -0.010990 -0.343398 0.108436
+run 0.626751 1.000000 0.074166 0.106703 0.416249 0.052441
+wicket 0.425219 0.074166 1.000000 -0.011126 -0.315732 0.072146
+No_ball -0.010990 0.106703 -0.011126 1.000000 0.131657 0.021708
+ECO -0.343398 0.416249 -0.315732 0.131657 1.000000 -0.025945
+bowler_ID 0.108436 0.052441 0.072146 0.021708 -0.025945 1.000000
+Team_ID -0.032241 0.038312 -0.026725 0.043275 0.055638 -0.119157
+Opposite_Team_ID -0.013550 -0.026440 -0.000786 -0.047672 -0.008739 0.028554
+15
+Team_ID Opposite_Team_ID
+over -0.032241 -0.013550
+run 0.038312 -0.026440
+wicket -0.026725 -0.000786
+No_ball 0.043275 -0.047672
+ECO 0.055638 -0.008739
+bowler_ID -0.119157 0.028554
+Team_ID 1.000000 -0.095822
+Opposite_Team_ID -0.095822 1.000000
+[40]: import matplotlib.pyplot as plt
+from seaborn import heatmap
+heatmap(data=df_bowl.corr(),annot=True)
+plt.show()
+<ipython-input-40-9867a213ca2b>:3: FutureWarning: The default value of
+numeric_only in DataFrame.corr is deprecated. In a future version, it will
+default to False. Select only valid columns or specify the value of numeric_only
+to silence this warning.
+heatmap(data=df_bowl.corr(),annot=True)
+16
+[ ]:
+[41]: '''
+plotting graph for players in bolwing based on economy
+'''
+top_10_players = df_bowl.sort_values(by='ECO', ascending=True).head(10)
+sea.barplot(x='ECO', y='Bowler', data=top_10_players)
+plt.title("Top 10 Players with the less economy")
+plt.xlabel("Economy")
+plt.ylabel("Bowler")
+plt.xticks(rotation=90)
+plt.figure(figsize=(10, 6))
+[41]: <Figure size 1000x600 with 0 Axes>
+<Figure size 1000x600 with 0 Axes>
+[42]: '''
+plotting graph for players in bolwing based on most winckets
+17
+'''
+total_wickets_by_player = df_bowl.groupby('Bowler')['wicket'].sum().
+↪reset_index()
+totalWicketsByPlayer = total_wickets_by_player.sort_values(by='wicket',␣
+↪ascending=False).head(10)
+sea.barplot(x='Bowler', y='wicket', data=totalWicketsByPlayer)
+plt.title("Total Wickets by Bowler")
+plt.xlabel("Bowler")
+plt.ylabel("Total Wickets")
+plt.xticks(rotation=90)
+plt.figure(figsize=(10, 6))
+plt.show()
+18
+<Figure size 1000x600 with 0 Axes>
+[43]: '''
+plotting graph for highets total by batsmen
+'''
+total_runs_by_player = df.groupby('Batsman')['Run'].sum().reset_index()
+total_runs_by_player = total_runs_by_player.sort_values(by='Run',␣
+↪ascending=False).head(10)
+plt.figure(figsize=(10, 6))
+sea.barplot(x='Batsman', y='Run', data=total_runs_by_player)
+plt.title("Total Runs by Player")
+plt.xlabel("Players")
+plt.ylabel("Total Runs")
+plt.xticks(rotation=90)
+# Show the plot
+plt.show()
+19
+[44]: # for batsmen dataframe
+from sklearn.model_selection import train_test_split
+# features
+numerical_features = ['Ball', '4s', '6s', 'Strike␣
+↪Rate','Team_ID','Opposite_Team_ID']
+# target variables
+target = ['Run','50s','100s']
+X = df[numerical_features]
+y = df[target]
+# splitting data into test and train data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2,␣
+↪random_state=42)
+[45]: X_train
+[45]: Ball 4s 6s Strike Rate Team_ID Opposite_Team_ID
+781 11 1 1 136.363636 6 1
+728 9 1 0 66.666667 1 5
+875 16 1 1 131.250000 0 5
+507 43 6 3 155.813953 8 2
+319 4 0 0 0.000000 5 9
+… … .. .. … … …
+466 7 0 0 57.142857 5 3
+121 2 0 0 50.000000 2 6
+1052 12 1 2 166.666667 6 2
+1103 5 1 1 220.000000 9 1
+868 2 0 0 100.000000 8 9
+[884 rows x 6 columns]
+[46]: # defining models
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.svm import SVR
+from sklearn.multioutput import MultiOutputRegressor
+model_linearRegression = LinearRegression()
+model_DecisionTreeRegressor=DecisionTreeRegressor(max_depth=6)
+model_RandomForestRegressor=RandomForestRegressor()
+model_GradientBoostingRegressor=MultiOutputRegressor(GradientBoostingRegressor())
+20
+# training models on train data
+model_linearRegression.fit(X_train, y_train)
+model_DecisionTreeRegressor.fit(X_train, y_train)
+model_RandomForestRegressor.fit(X_train, y_train)
+model_GradientBoostingRegressor.fit(X_train, y_train)
+[46]: MultiOutputRegressor(estimator=GradientBoostingRegressor())
+[47]: X_test
+[47]: Ball 4s 6s Strike Rate Team_ID Opposite_Team_ID
+323 14 3 0 150.000000 5 9
+732 2 0 0 150.000000 1 5
+56 16 1 1 137.500000 6 7
+693 30 3 0 103.333333 9 4
+485 12 0 0 50.000000 1 4
+… … .. .. … … …
+1078 4 1 1 275.000000 4 3
+581 21 3 3 190.476190 8 1
+1013 20 2 0 80.000000 8 4
+1012 9 0 0 77.777778 8 4
+528 9 0 0 33.333333 6 9
+[222 rows x 6 columns]
+[48]: type(X_test)
+[48]: pandas.core.frame.DataFrame
+[49]: import warnings
+warnings.filterwarnings('ignore')
+[50]: # predicited values using linear regression
+for index,row in X_test.iterrows():
+predict_value=model_linearRegression.
+↪predict([[row['Ball'],row['4s'],row['6s'],row['Strike␣
+↪Rate'],row['Team_ID'],row['Opposite_Team_ID']]])
+print(predict_value[0][0])
+19.428157431628478
+1.5197010982413772
+19.878741039664263
+30.89457780715993
+7.494773413637896
+79.36048322878347
+-1.7363763488829536
+26.84023445669458
+21
+8.035261017303682
+20.180501985321353
+16.136584262609233
+45.66821698890533
+81.01848096845502
+81.59441138897138
+32.55554302543791
+32.89984093641392
+19.968008368911565
+6.23344687933969
+41.338145441009445
+25.320475849671954
+-2.4864138635098563
+12.6195138081766
+1.3854412715370863
+2.7128385360683653
+54.12962513356253
+22.626453063709118
+37.58095363045352
+28.719807211447208
+2.1467196620683975
+6.036361247939675
+-1.619430949059251
+0.3096083493283328
+28.115248699585006
+47.53306262361676
+47.754744153790085
+1.509953869819081
+-0.8995756841955604
+28.810233041933493
+5.121132340093115
+39.899633604366855
+6.624861152471132
+28.783834391399427
+2.358085437872008
+16.56553991581817
+18.831436437810098
+2.4007067586090756
+31.992619766534705
+7.751787124361927
+24.325395691914025
+0.825262649017195
+-1.570330703150309
+57.74405097626342
+13.277939841521139
+11.512048388960983
+0.07900873361943805
+5.691043018787596
+22
+-0.9260176067646042
+5.535204936564458
+17.19531198493224
+18.37338328446617
+27.01890625559032
+21.536481950913597
+3.087593718794399
+71.50676211288426
+98.5496398978844
+14.46389061882261
+25.445074992023905
+7.197299288067613
+21.821289581735282
+19.526015453949906
+51.20593764541947
+9.700576670604294
+19.34267571568907
+6.542926602891228
+23.73984593788582
+-0.0605949895441622
+-0.9864253783260062
+55.32604980241936
+4.970018155666715
+5.709920400031018
+45.06453199916798
+5.098517288788194
+32.105425606482754
+1.4458490430984883
+13.37319325141828
+18.00238730347714
+6.308048251234732
+-0.056811390315016475
+59.65651467163387
+1.3929651979604003
+20.060297060992195
+0.704490377929369
+25.33561200071254
+55.314671782423886
+5.498598722520885
+-1.638305673170003
+16.770204434533014
+4.977542082090029
+20.463762939891158
+17.924400503690155
+25.78094076511584
+-0.8543455815857199
+5.143790663433013
+25.764872388187424
+23
+-0.8052453356767781
+70.32697834908383
+19.30972464134401
+0.8518209631266229
+39.69830943711288
+31.294648133258132
+88.71798073928647
+1.3816576723079401
+3.5219727190380095
+51.064402462345996
+35.98612273894439
+-0.1786953124023336
+-1.7363763488829536
+8.24562190874281
+-0.11076361441761762
+3.802538024010019
+29.97322307836652
+-1.7062373711547192
+10.349642420624303
+0.9726365062494269
+26.378381870629525
+2.4035383704140916
+3.4842665428514827
+1.0570751350182581
+24.336703217566484
+25.065200351237483
+16.973188548009155
+12.211586974472509
+59.12351700705918
+49.4045064254357
+133.1526663126435
+-1.7363763488829536
+20.582114047186625
+41.34260799941676
+48.079021010551756
+-0.08926021411218876
+6.972706573586848
+-0.21755641162332928
+48.3918911387197
+8.7455068663868
+32.039624088252395
+2.067480438431221
+28.060450782487134
+1.5989835939135313
+48.296770532732225
+74.33475958018562
+25.874649879951328
+7.6293806672801825
+24
+24.941242981578153
+-1.668487922933215
+-1.570330703150309
+6.211042471095125
+93.92011220720666
+76.93414336755572
+14.949996046903834
+51.12002706915398
+52.300246049383915
+49.48211635895309
+1.576368542608611
+9.643712846949587
+13.151364988029295
+9.081753509363503
+-1.7401599481120995
+-1.638305673170003
+2.112753813076039
+5.1186075403237865
+62.12715661276037
+-0.1156588646462553
+53.87590498656796
+50.555162228249415
+1.834579679143741
+6.81109610892436
+0.025099781551814804
+1.0608587342474038
+46.52652233369628
+41.537790381280146
+-0.1495814416036354
+49.14830847686069
+25.113125779790053
+-0.07790941642475113
+47.632952998419796
+9.298619361810616
+10.872669129132197
+44.49789843295487
+26.080432985925267
+6.5278787500446
+60.89419115220855
+22.062414415685502
+-2.422265764754286
+43.182849580404564
+-0.8165961333642158
+-1.7250688232304934
+29.800280235257542
+-1.7250688232304934
+20.433690862525875
+1.8761127265943909
+25
+36.733193590019056
+10.106167955756158
+6.274102296564278
+-0.8354708574749679
+20.289550963434205
+78.77117145239694
+7.0467531453782115
+0.7723788038791071
+43.757644747547204
+18.67377839383081
+20.65370557365324
+42.83454306275678
+1.652892545981155
+0.014860634863867794
+7.201762031753317
+0.02621143255130587
+91.64802430803296
+12.883051754612591
+39.992891409356574
+19.973498844362098
+5.792943222897341
+5.09256485043623
+[51]: '''
+function to calucualte the metrics like
+mean squared error
+root mean squared error
+mean absoulte error
+explained variance
+R-squared
+'''
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score,␣
+↪explained_variance_score, mean_absolute_percentage_error
+def testPrediction(model,name,X_test,y_test):
+y_pred = model.predict(X_test)
+mse = mean_squared_error(y_test, y_pred)
+rmse = mean_squared_error(y_test, y_pred, squared=False)
+mae = mean_absolute_error(y_test, y_pred)
+r2 = r2_score(y_test, y_pred)
+explained_var = explained_variance_score(y_test, y_pred)
+print('Metrics for model ',name)
+print(f'Mean Squared Error: {mse}')
+print(f'Root Mean Squared Error: {rmse}')
+print(f'Mean Absolute Error: {mae}')
+26
+print(f'R-squared: {r2}')
+print(f'Explained Variance: {explained_var}')
+print('--------------------------------------------------------------------')
+print('\n')
+testPrediction(model_linearRegression,'linearRegression',X_test,y_test)
+testPrediction(model_DecisionTreeRegressor,'DecisionTreeRegressor',X_test,y_test)
+testPrediction(model_RandomForestRegressor,'RandomForestRegressor',X_test,y_test)
+testPrediction(model_GradientBoostingRegressor,'GradientBoostingRegressor',X_test,y_test)
+Metrics for model linearRegression
+Mean Squared Error: 2.6144306082912907
+Root Mean Squared Error: 1.0473410420797977
+Mean Absolute Error: 0.7100141897730623
+R-squared: 0.5351954738970562
+Explained Variance: 0.5361154848657637
+--------------------------------------------------------------------
+Metrics for model DecisionTreeRegressor
+Mean Squared Error: 4.944043790333633
+Root Mean Squared Error: 1.3817459806059267
+Mean Absolute Error: 0.8021660240672194
+R-squared: 0.6136237745456173
+Explained Variance: 0.615444549549896
+--------------------------------------------------------------------
+Metrics for model RandomForestRegressor
+Mean Squared Error: 1.7427291291291283
+Root Mean Squared Error: 0.8223578124701377
+Mean Absolute Error: 0.322942942942943
+R-squared: 0.8407003976210466
+Explained Variance: 0.8408128551578106
+--------------------------------------------------------------------
+Metrics for model GradientBoostingRegressor
+Mean Squared Error: 2.132200464527884
+Root Mean Squared Error: 0.9201591536572198
+Mean Absolute Error: 0.49275614394539846
+R-squared: 0.7582546029942853
+Explained Variance: 0.7586819209068545
+--------------------------------------------------------------------
